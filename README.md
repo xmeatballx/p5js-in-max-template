@@ -2,4 +2,4 @@
 
 ## demonstration of the node.script object in Max 8
 
-### to run: clone repo, click start server, open browser tab at url "localhost:3000"
+### to run: clone repo, open p5-in-max.maxpat in Max 8, click start server, open browser tab at url "localhost:3000"

@@ -19,8 +19,8 @@ function shuffleArray(array) {
 
 function setup() {
 	createCanvas(500, 500);
-	sprites = [];
 	characterToMidi = createVector(0,0);
+	//create DOM elements
 	input = createInput('type & submit to make music');
 	inputToString();
 	input.size(width/2,16)
@@ -31,12 +31,16 @@ function setup() {
 	slider = createSlider(50, 500, 200);
 	slider.changed(reportVal);
 	slider.position(width - width/4,0);
+	//assign a midi note to each character
 	characterArray = ['36', '38', '40', '43', '45', '48', '50', '52', '55', '57', '60', '62', '64', '67', '69', '72', '74', '76', '79', '81', '84', '86', '88', '91', '93', '96', '98']
 	characterToMidi.x = shuffleArray(characterArray);
 	characterToMidi.y = allCharacters.split('');
+	//initialize array of sprites and create a new one on each 'beat' message
+	sprites = [];
 	socket.on('beat', createSprite);
 }
 
+//match characters in input element corresponding midi notes and replace
 function inputToString(){
 	let outputArray = [];
 	textString = input.value().toString().replace(/["'.,\/#!$%\^&\*;:{}=\-_`~()]\s/g,'').replace(/\s/g, '').split('');
@@ -51,13 +55,12 @@ function inputToString(){
 		}
 	}
 }
-
+//send slider value to server on change
 function reportVal(){
 	var val = slider.value();
-	//console.log(val);
 	socket.emit('report', val);
 }
-
+//create new sprite 
 function createSprite(){
 	background(255);
 	for (var i = 0; i < sprites.length; i++) {
@@ -72,7 +75,9 @@ function createSprite(){
 	fill(0);
 	text('speed', width - width/6-5, 30);
 }
-
+//initialize sprite class so
+//each new sprite spawns a a random location w/ a random fill 
+//an so each sprite shrinks and loses opacity over time
 class Sprite{
 	constructor(){
 		this.pos = createVector(random(width/2-width/4,width/2+width/4), random(height/2+height/4,height/2-height/4));
@@ -83,7 +88,6 @@ class Sprite{
 	}
 
 	update(i){
-		//console.log(i);
 		this.radius = 510 - i;
 		this.color = color(this.r,this.g,255,i/2);
 	}
